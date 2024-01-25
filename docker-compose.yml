@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    container_name: 'e-cmmc-postgres'
+    environment:
+      POSTGRES_USER: postgresql
+      POSTGRES_PASSWORD: postgresql
+      POSTGRES_DB: e-cmmc
+
+  sqlite3:
+    image: keinos/sqlite3
+    working_dir: /workspaces
+    container_name: 'e-cmmc-sqlite3'
+    volumes:
+      - .\src/data\sqlite3\scripts\init.sql:/workspaces/init.sql
+    command: /bin/sh -c "sqlite3 e-cmmc-inventory.db < init.sql && tail -f /dev/null"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'e-cmmc-rabbitmq'
+    hostname: e-cmmc-brk
+    ports:
+      # AMQP protocol port
+      - 5672:5672
+      # HTTP management UI
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+
+  api-order:
+    build:
+      context: .\src\server\api-order
+      dockerfile: Dockerfile
+    container_name: 'e-cmmc-api-order'
+    volumes:
+      - .\src\server\api-order\volume:/app
+    ports:
+      - 5001:5001
+    depends_on:
+      - sqlite3
+
+  api-inventory:
+    build:
+      context: .\src\server\api-inventory
+      dockerfile: Dockerfile
+    ports:
+      -"8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
