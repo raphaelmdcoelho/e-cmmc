@@ -47,6 +47,6 @@ services:
       context: .\src\server\api-inventory
       dockerfile: Dockerfile
     ports:
-      -"8080:80"
+      -"5002:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
