@@ -1,9 +1,10 @@
-CREATE TABLE IF NOT EXISTS inventory(
+CREATE TABLE IF NOT EXISTS order(
 	id int primary key,
-	description varchar(250) NOT NULL
+	description varchar(250) NOT NULL,
+	username varchar(250) NOT NULL
 );
 
-DELETE FROM inventory;
+DELETE FROM order;
 
-INSERT INTO inventory (id, description) VALUES (1, 'Copo');
-INSERT INTO inventory (id, description) VALUES (2, 'Batata');
+INSERT INTO order (id, description, username) VALUES (1, 'Copo', 'Test');
+INSERT INTO order (id, description, username) VALUES (2, 'Batata', 'Test');

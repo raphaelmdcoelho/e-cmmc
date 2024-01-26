@@ -8,6 +8,8 @@ services:
       POSTGRES_USER: postgresql
       POSTGRES_PASSWORD: postgresql
       POSTGRES_DB: e-cmmc
+    volumes:
+      - .\src\data\postgresql\init-db.sql:/docker-entrypoint.init-db.d/init-db.sql
 
   sqlite3:
     image: keinos/sqlite3
@@ -16,7 +18,7 @@ services:
     volumes:
       - .\src\data\sqlite3\init.sql:/workspaces/init.sql
       - .\src\data\sqlite3:/workspaces
-    command: sh -c 'sqlite3 inventory.db < /workspaces/init.sql && tail -f /dev/null'
+    command: sh -c 'sqlite3 placement.db < /workspaces/init.sql && tail -f /dev/null'
 
   rabbitmq:
     image: rabbitmq:3-management
