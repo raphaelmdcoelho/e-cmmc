@@ -14,8 +14,9 @@ services:
     working_dir: /workspaces
     container_name: 'e-cmmc-sqlite3'
     volumes:
-      - .\src/data\sqlite3\scripts\init.sql:/workspaces/init.sql
-    command: /bin/sh -c "sqlite3 e-cmmc-inventory.db < init.sql && tail -f /dev/null"
+      - .\src\data\sqlite3\init.sql:/workspaces/init.sql
+      - .\src\data\sqlite3:/workspaces
+    command: sh -c 'sqlite3 inventory.db < /workspaces/init.sql && tail -f /dev/null'
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -32,11 +33,9 @@ services:
 
   api-order:
     build:
-      context: .\src\server\api-order
+      context: .\src\server\api-order\
       dockerfile: Dockerfile
     container_name: 'e-cmmc-api-order'
-    volumes:
-      - .\src\server\api-order\volume:/app
     ports:
       - 5001:5001
     depends_on:
@@ -44,9 +43,9 @@ services:
 
   api-inventory:
     build:
-      context: .\src\server\api-inventory
+      context: .\src\server\api-inventory\E.CMMC.Inventory
       dockerfile: Dockerfile
     ports:
-      -"5002:80"
+      - 5002:80
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
