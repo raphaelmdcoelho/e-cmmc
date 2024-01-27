@@ -6,5 +6,5 @@ public class MessageDbContext : DbContext
     {
     }
 
-    public DbSet<Message> Messages { get; set; }
+    public DbSet<MessageEntity> Messages { get; set; }
 }
